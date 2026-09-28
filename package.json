@@ -1,0 +1,6 @@
+{
+  "name": "esgha-app",
+  "version": "1.0.0",
+  "description": "إصغاء - مرافقك الشرعي بالذكاء الاصطناعي (مجاني بالكامل عبر Google Gemini API)",
+  "private": true
+}

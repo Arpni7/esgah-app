@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إصغاء</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f1e6; --surface:#ffffff; --ink:#1f2a24; --muted:#6b6153;
+  --accent:#0f6b5c; --accent-ink:#ffffff; --gold:#a97a2f; --border:#e1d7c1;
+  --rajih-bg:#eef6f2; --rec:#b23a2f;
+}
+*{box-sizing:border-box}
+html,body{ height:100% }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Tajawal','Segoe UI',Tahoma,sans-serif;
+  display:flex; flex-direction:column;
+}
+header{ padding:12px 18px; border-bottom:1px solid var(--border); background:var(--surface); position:sticky; top:0; z-index:5; }
+.brand{ display:flex; align-items:center; gap:12px; }
+.arch{ width:32px; height:36px; flex:none; background:var(--accent); border-radius:50% 50% 4px 4px / 60% 60% 4px 4px; }
+header h1{ font-family:'Amiri',serif; font-size:19px; margin:0; }
+header p{ margin:1px 0 0; font-size:12px; color:var(--muted); }
+.tabs{ display:flex; gap:6px; margin-top:10px; }
+.tab{ flex:1; text-align:center; padding:8px 6px; border-radius:10px; font-size:13.5px; font-weight:700; background:var(--bg); border:1px solid var(--border); color:var(--muted); cursor:pointer; }
+.tab.active{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+
+main{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:14px; max-width:640px; width:100%; margin:0 auto; }
+.panel{ display:none; flex-direction:column; gap:14px; }
+.panel.active{ display:flex; }
+
+.intro{ font-size:14px; color:var(--muted); line-height:1.9; }
+.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.chip{ font-size:12.5px; padding:7px 12px; border-radius:20px; background:var(--surface); border:1px solid var(--border); color:var(--ink); cursor:pointer; }
+
+.bubble-q{ align-self:flex-start; max-width:85%; background:var(--accent); color:var(--accent-ink); padding:10px 14px; border-radius:14px 14px 14px 2px; font-size:14.5px; line-height:1.7; }
+
+.card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px; }
+.card h2{ font-family:'Amiri',serif; font-size:19px; margin:0 0 10px; }
+.section-label{ font-size:12.5px; color:var(--gold); font-weight:700; margin:14px 0 6px; }
+.evid-list{ margin:0; padding-inline-start:18px; font-size:14px; line-height:1.9; }
+.mad-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.mad-item{ background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:9px 10px; font-size:13px; line-height:1.7; }
+.mad-item b{ display:block; font-size:12.5px; color:var(--muted); margin-bottom:2px; }
+.rajih{ background:var(--rajih-bg); border-radius:10px; padding:12px 14px; font-size:14px; line-height:1.85; border-inline-start:3px solid var(--accent); }
+.note{ font-size:11.5px; color:var(--muted); margin-top:12px; }
+.empty-card{ font-size:14px; line-height:1.9; }
+.loading{ font-size:13.5px; color:var(--muted); }
+
+.mic-row{ display:flex; align-items:center; gap:12px; }
+.mic-btn{ width:64px; height:64px; border-radius:50%; border:none; flex:none; background:var(--accent); color:var(--accent-ink); font-size:24px; cursor:pointer; }
+.mic-btn.recording{ background:var(--rec); }
+.mic-status{ font-size:13px; color:var(--muted); }
+.transcript-box{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; font-size:14px; line-height:1.9; max-height:160px; overflow-y:auto; }
+textarea.manual{ width:100%; border:1px solid var(--border); border-radius:12px; padding:10px 12px; font-family:inherit; font-size:14px; background:var(--surface); color:var(--ink); resize:vertical; }
+.controls-row{ display:flex; gap:8px; align-items:center; }
+select{ flex:none; border:1px solid var(--border); background:var(--surface); color:var(--ink); border-radius:10px; padding:8px 10px; font-family:inherit; font-size:13.5px; }
+.btn-secondary{ flex:1; background:var(--surface); border:1px solid var(--border); color:var(--ink); border-radius:10px; padding:9px 10px; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; }
+.summary-list{ margin:0; padding-inline-start:18px; font-size:13.5px; line-height:1.9; }
+.translation-box{ background:var(--rajih-bg); border-radius:10px; padding:12px 14px; font-size:14px; line-height:1.85; border-inline-start:3px solid var(--accent); }
+.qh-item{ background:var(--surface); border:1px solid var(--border); border-inline-start:3px solid var(--gold); border-radius:10px; padding:10px 12px; font-size:14px; line-height:1.8; }
+.qh-item .ref{ display:block; font-size:11.5px; color:var(--muted); margin-top:4px; }
+.ask-during{ background:var(--gold); color:#fff; border:none; border-radius:10px; padding:9px 12px; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; }
+.context-note{ font-size:12px; color:var(--muted); background:var(--bg); border:1px dashed var(--border); border-radius:10px; padding:8px 10px; }
+
+footer{ border-top:1px solid var(--border); background:var(--surface); padding:10px 12px; display:flex; gap:8px; position:sticky; bottom:0; }
+textarea#q{ flex:1; resize:none; border:1px solid var(--border); border-radius:12px; padding:10px 12px; font-family:inherit; font-size:14.5px; background:var(--bg); color:var(--ink); max-height:90px; }
+button.ask{ background:var(--accent); color:var(--accent-ink); border:none; border-radius:12px; padding:0 18px; font-family:inherit; font-size:14.5px; font-weight:700; cursor:pointer; }
+button:disabled{ opacity:.5; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="arch"></div>
+    <div><h1>إصغاء</h1><p>مرافقك الشرعي بالذكاء الاصطناعي</p></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" id="tabListenBtn">استمع</div>
+    <div class="tab" id="tabAskBtn">استفتِ</div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="panel active" id="panel-listen">
+    <div class="intro">استمع لخطبة أو درس، وشاهد ترجمة فورية وملخصاً حياً.</div>
+
+    <div class="mic-row">
+      <button class="mic-btn" id="micBtn">🎙️</button>
+      <div class="mic-status" id="micStatus">اضغط للبدء بالاستماع</div>
+    </div>
+
+    <div>
+      <div class="section-label">النص الملتقط</div>
+      <div class="transcript-box" id="transcriptBox">سيظهر هنا ما يُلتقط من الصوت لحظياً...</div>
+    </div>
+
+    <div>
+      <div class="section-label">أو الصق نصاً بدل الاستماع</div>
+      <textarea class="manual" id="manualText" rows="3" placeholder="الصق هنا مقطعاً من خطبة أو درس..."></textarea>
+      <button class="btn-secondary" id="addManualBtn" style="width:100%; margin-top:8px;">إضافة إلى النص الملتقط</button>
+    </div>
+
+    <div>
+      <div class="section-label">أو ارفع تسجيلاً / صورة / فيديو</div>
+      <input type="file" id="mediaFile" accept="audio/*,video/*,image/*" style="width:100%; font-size:13px; padding:8px 0;">
+      <button class="btn-secondary" id="transcribeBtn" style="width:100%; margin-top:8px;">تفريغ وتلخيص وترجمة الملف</button>
+      <div style="font-size:11px; color:var(--muted); margin-top:6px;">أفضل مع ملفات صغيرة (دقيقة أو دقيقتين، أقل من ٣-٤ ميجا).</div>
+    </div>
+
+    <div class="controls-row">
+      <select id="langSelect">
+        <option value="الإنجليزية">English</option>
+        <option value="الأردية">اردو</option>
+        <option value="الإندونيسية">Bahasa Indonesia</option>
+        <option value="الفرنسية">Français</option>
+      </select>
+      <button class="btn-secondary" id="updateBtn">ترجم وحدّث الملخص</button>
+    </div>
+
+    <div id="quranHadithWrap" style="display:none">
+      <div class="section-label">الآيات والأحاديث المذكورة</div>
+      <div id="quranHadithList" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+
+    <div id="summaryWrap" style="display:none">
+      <div class="section-label">ملخص حي</div>
+      <ul class="summary-list" id="summaryList"></ul>
+    </div>
+    <div id="translationWrap" style="display:none">
+      <div class="section-label">آخر ترجمة</div>
+      <div class="translation-box" id="translationBox"></div>
+    </div>
+
+    <button class="ask-during" id="askDuringBtn">عندي سؤال حول هذا الموضوع</button>
+  </div>
+
+  <div class="panel" id="panel-ask">
+    <div class="intro">
+      اكتب موقفك الفقهي بلغتك العادية، وسيعرض لك النظام الأدلة، وآراء المذاهب الأربعة، والقول الراجح مع سببه.
+      <div class="chips" id="chips"></div>
+    </div>
+    <div id="contextNoteWrap"></div>
+    <div id="askResults" style="display:flex; flex-direction:column; gap:14px;"></div>
+  </div>
+</main>
+
+<footer id="askFooter" style="display:none">
+  <textarea id="q" rows="1" placeholder="مثال: أعمل بوظيفة فيها عمولة على منتج فيه شبهة ربا..."></textarea>
+  <button class="ask" id="askBtn">اسأل</button>
+</footer>
+
+<script>
+/* ---- tabs ---- */
+const tabListenBtn = document.getElementById('tabListenBtn');
+const tabAskBtn = document.getElementById('tabAskBtn');
+const panelListen = document.getElementById('panel-listen');
+const panelAsk = document.getElementById('panel-ask');
+const askFooter = document.getElementById('askFooter');
+function showTab(tab){
+  const listen = tab==='listen';
+  panelListen.classList.toggle('active', listen);
+  panelAsk.classList.toggle('active', !listen);
+  tabListenBtn.classList.toggle('active', listen);
+  tabAskBtn.classList.toggle('active', !listen);
+  askFooter.style.display = listen ? 'none' : 'flex';
+}
+tabListenBtn.onclick = ()=>showTab('listen');
+tabAskBtn.onclick = ()=>showTab('ask');
+
+/* ---- sample chips (titles only, for quick demo) ---- */
+const sampleTitles = [
+  "حكم تارك الصلاة عمداً",
+  "حكم الضحك في الصلاة",
+  "حكم الصلاة في ثوب مرسوم عليه صور حيوانات",
+  "حكم صلاة الحائض أو النفساء إذا طهرت قبل الفجر أو قبل غروب الشمس",
+  "حكم تعمد تأخير صلاة الفجر عن وقتها للدراسة أو النوم",
+  "حكم وصل النافلة بالفريضة مباشرة بدون فاصل",
+  "حكم النقاب للمرأة",
+  "حكم الغيبة والنميمة",
+  "حكم من صلى جالسًا خلف الإمام دون عذر",
+  "حكم قراءة الفاتحة قبل استتمام القيام في الصلاة",
+  "حكم التأمين التجاري والتعاوني",
+  "حكم العمل في شركات التأمين التجاري",
+  "حكم زكاة الدين الذي لك على الناس",
+  "حكم الزكاة على من عليه دين",
+  "حكم إسقاط الدين عن الفقير واحتسابه من الزكاة",
+  "حكم طلاق الغضبان",
+  "حكم البيع بالتقسيط مع زيادة الثمن",
+  "حكم تعدد الزوجات وشرط العدل"
+];
+const chips = document.getElementById('chips');
+const qInput = document.getElementById('q');
+const askBtn = document.getElementById('askBtn');
+const askResults = document.getElementById('askResults');
+const contextNoteWrap = document.getElementById('contextNoteWrap');
+const mainScroll = document.getElementById('main');
+
+sampleTitles.forEach(title=>{
+  const c = document.createElement('button');
+  c.className='chip'; c.textContent = title;
+  c.onclick = ()=>{ qInput.value = title; ask(); };
+  chips.appendChild(c);
+});
+
+function scrollDown(){ mainScroll.scrollTop = mainScroll.scrollHeight; }
+
+function renderMatched(d, questionText){
+  const bubble = document.createElement('div');
+  bubble.className='bubble-q'; bubble.textContent = questionText;
+  askResults.appendChild(bubble);
+  const card = document.createElement('div');
+  card.className='card';
+  if(d.views){
+    card.innerHTML = `
+      <h2>${d.title}</h2>
+      <div class="section-label">الأدلة</div>
+      <ul class="evid-list">${d.evidences.map(e=>`<li>${e}</li>`).join('')}</ul>
+      <div class="section-label">آراء المذاهب</div>
+      <div class="mad-grid">
+        <div class="mad-item"><b>الحنفية</b>${d.views.hanafi}</div>
+        <div class="mad-item"><b>المالكية</b>${d.views.maliki}</div>
+        <div class="mad-item"><b>الشافعية</b>${d.views.shafii}</div>
+        <div class="mad-item"><b>الحنابلة</b>${d.views.hanbali}</div>
+      </div>
+      <div class="section-label">الراجح</div>
+      <div class="rajih">${d.rajih}</div>
+      <div class="note">إجابة من قاعدة معرفة محدودة — راجع أهل العلم الموثوقين للفتوى الفعلية.</div>
+    `;
+  } else {
+    card.innerHTML = `
+      <h2>${d.title}</h2>
+      <div class="section-label">الأدلة</div>
+      <ul class="evid-list">${d.evidences.map(e=>`<li>${e}</li>`).join('')}</ul>
+      <div class="section-label">فتوى الشيخ ${d.scholar || ''}</div>
+      <div class="rajih">${d.rajih}</div>
+      <div class="note">المصدر: <a href="${d.source_url}" target="_blank" rel="noopener">${d.source_url}</a> — راجع الرابط للفتوى كاملة، وللمزيد راجع أهل العلم الموثوقين.</div>
+    `;
+  }
+  askResults.appendChild(card);
+  attachCardTools(card, d);
+  scrollDown();
+}
+function renderEmpty(questionText){
+  const bubble = document.createElement('div');
+  bubble.className='bubble-q'; bubble.textContent = questionText;
+  askResults.appendChild(bubble);
+  const card = document.createElement('div');
+  card.className='card empty-card';
+  card.innerHTML = `هذه المسألة غير متوفرة حالياً في قاعدة المعرفة.<br>جرّب أحد الأسئلة الجاهزة بالأعلى.`;
+  askResults.appendChild(card);
+  scrollDown();
+}
+
+function renderError(msg, questionText){
+  const bubble = document.createElement('div');
+  bubble.className='bubble-q'; bubble.textContent = questionText;
+  askResults.appendChild(bubble);
+  const card = document.createElement('div');
+  card.className='card empty-card';
+  card.style.borderColor = '#b23a2f';
+  card.innerHTML = `<b style="color:#b23a2f">خطأ فعلي من السيرفر:</b><br>${msg}`;
+  askResults.appendChild(card);
+  scrollDown();
+}
+
+function attachCardTools(card, entry){
+  const toolbar = document.createElement('div');
+  toolbar.style.cssText = 'display:flex; flex-wrap:wrap; gap:6px; margin-top:14px;';
+  const mkBtn = (label) => { const b=document.createElement('button'); b.className='chip'; b.textContent=label; return b; };
+  const chatBtn = mkBtn('💬 تابع النقاش');
+  const challengeBtn = mkBtn('🎭 جرّب تشرحه لمتشكك');
+  const childBtn = mkBtn('🧒 بسّطها لطفل');
+  const newMuslimBtn = mkBtn('🕊️ بسّطها لغير مسلم جديد');
+  const planBtn = mkBtn('✅ خطوات عملية');
+  toolbar.append(chatBtn, challengeBtn, childBtn, newMuslimBtn, planBtn);
+  card.appendChild(toolbar);
+
+  const panel = document.createElement('div');
+  panel.style.cssText = 'margin-top:10px; display:none; flex-direction:column; gap:8px;';
+  card.appendChild(panel);
+
+  let chatHistory = [];
+  let challengeHistory = [];
+
+  async function callAssist(mode, message, history){
+    const r = await fetch('/api/assist', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ mode, title: entry.title, history, message })
+    });
+    const data = await r.json();
+    if(!r.ok || data.error) throw new Error(data.error || ('HTTP '+r.status));
+    return data.reply;
+  }
+
+  function addBubble(container, text, who){
+    const b=document.createElement('div');
+    b.style.cssText = who==='user'
+      ? 'align-self:flex-end; max-width:85%; background:var(--gold); color:#fff; padding:8px 12px; border-radius:12px 12px 2px 12px; font-size:13.5px; line-height:1.7;'
+      : 'align-self:flex-start; max-width:85%; background:var(--rajih-bg); padding:8px 12px; border-radius:12px 12px 12px 2px; font-size:13.5px; line-height:1.7; white-space:pre-line;';
+    b.textContent = text;
+    container.appendChild(b);
+  }
+
+  function buildChatPanel(mode, history){
+    panel.style.display='flex';
+    panel.innerHTML = '';
+    const thread = document.createElement('div');
+    thread.style.cssText='display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;';
+    const row = document.createElement('div');
+    row.style.cssText='display:flex; gap:6px;';
+    const input = document.createElement('textarea');
+    input.rows=1;
+    input.placeholder = mode==='chat' ? 'اسأل متابعة عن هذه المسألة...' : 'اكتب ردك على الاعتراض...';
+    input.style.cssText='flex:1; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-family:inherit; font-size:13.5px; background:var(--bg); color:var(--ink); resize:none;';
+    const send = document.createElement('button');
+    send.className='btn-secondary'; send.textContent='إرسال'; send.style.flex='none'; send.style.width='70px';
+    row.append(input, send);
+    panel.append(thread, row);
+
+    async function doSend(){
+      const msg = input.value.trim();
+      if(!msg && history.length) return;
+      if(msg){ addBubble(thread, msg, 'user'); history.push({role:'user', content: msg}); input.value=''; }
+      send.disabled = true;
+      const loadingB = document.createElement('div');
+      loadingB.style.cssText='font-size:12px; color:var(--muted);'; loadingB.textContent='جاري الرد...';
+      thread.appendChild(loadingB); thread.scrollTop = thread.scrollHeight;
+      try{
+        const reply = await callAssist(mode, msg, history);
+        loadingB.remove();
+        addBubble(thread, reply, 'assistant');
+        history.push({role:'assistant', content: reply});
+      }catch(e){
+        loadingB.remove();
+        addBubble(thread, 'خطأ: ' + e.message, 'assistant');
+      }
+      send.disabled = false;
+      thread.scrollTop = thread.scrollHeight;
+    }
+    send.onclick = doSend;
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); doSend(); } });
+    if(mode==='challenge' && history.length===0){ doSend(); }
+  }
+
+  chatBtn.onclick = ()=> buildChatPanel('chat', chatHistory);
+  challengeBtn.onclick = ()=> buildChatPanel('challenge', challengeHistory);
+
+  async function singleAction(mode){
+    panel.style.display='flex';
+    panel.innerHTML = '<div style="font-size:13px;color:var(--muted);">جاري التحضير...</div>';
+    try{
+      const reply = await callAssist(mode, '', []);
+      panel.innerHTML = `<div style="white-space:pre-line; font-size:14px; line-height:1.8; background:var(--rajih-bg); border-radius:10px; padding:12px 14px;">${reply}</div>`;
+    }catch(e){
+      panel.innerHTML = `<div style="color:#b23a2f; font-size:13px;">خطأ: ${e.message}</div>`;
+    }
+  }
+  childBtn.onclick = ()=> singleAction('simplify_child');
+  newMuslimBtn.onclick = ()=> singleAction('simplify_new');
+  planBtn.onclick = ()=> singleAction('action_plan');
+}
+
+async function ask(){
+  const text = qInput.value.trim();
+  if(!text) return;
+  askBtn.disabled = true;
+  const loading = document.createElement('div');
+  loading.className='loading'; loading.textContent='جاري البحث في قاعدة المعرفة...';
+  askResults.appendChild(loading); scrollDown();
+  try{
+    const r = await fetch('/api/ask', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ question: text })
+    });
+    const data = await r.json();
+    loading.remove();
+    if(!r.ok || data.error){ renderError(data.error || `HTTP ${r.status}`, text); }
+    else if(data.matched) renderMatched(data.matched, text);
+    else renderEmpty(text);
+  }catch(e){
+    loading.remove();
+    renderError(e.message || 'تعذر الاتصال بالسيرفر', text);
+  }
+  qInput.value='';
+  askBtn.disabled = false;
+}
+askBtn.addEventListener('click', ask);
+qInput.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); ask(); } });
+
+/* ---- listen mode ---- */
+const micBtn = document.getElementById('micBtn');
+const micStatus = document.getElementById('micStatus');
+const transcriptBox = document.getElementById('transcriptBox');
+const manualText = document.getElementById('manualText');
+const addManualBtn = document.getElementById('addManualBtn');
+const updateBtn = document.getElementById('updateBtn');
+const langSelect = document.getElementById('langSelect');
+const summaryWrap = document.getElementById('summaryWrap');
+const summaryList = document.getElementById('summaryList');
+const translationWrap = document.getElementById('translationWrap');
+const translationBox = document.getElementById('translationBox');
+const askDuringBtn = document.getElementById('askDuringBtn');
+
+let finalTranscript = '';
+let lastProcessedLen = 0;
+let recognizing = false;
+let recognition = null;
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+function renderTranscript(interim){
+  transcriptBox.innerHTML = (finalTranscript || '') + (interim ? `<span style="color:var(--muted)">${interim}</span>` : '');
+  if(!finalTranscript && !interim) transcriptBox.textContent = 'سيظهر هنا ما يُلتقط من الصوت لحظياً...';
+  transcriptBox.scrollTop = transcriptBox.scrollHeight;
+}
+
+if(SpeechRec){
+  recognition = new SpeechRec();
+  recognition.lang = 'ar-SA';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.onresult = (e)=>{
+    let interim = '';
+    for(let i=e.resultIndex; i<e.results.length; i++){
+      const t = e.results[i][0].transcript;
+      if(e.results[i].isFinal) finalTranscript += t + ' ';
+      else interim += t;
+    }
+    renderTranscript(interim);
+  };
+  recognition.onerror = ()=>{ micStatus.textContent = 'تعذّر الوصول للميكروفون — تحقق من الأذونات.'; };
+  recognition.onend = ()=>{ if(recognizing){ try{ recognition.start(); }catch(e){} } };
+} else {
+  micStatus.textContent = 'هذا المتصفح لا يدعم التقاط الصوت — جرّب Chrome.';
+  micBtn.disabled = true;
+}
+
+micBtn.onclick = ()=>{
+  if(!recognition) return;
+  if(!recognizing){
+    recognizing = true;
+    try{ recognition.start(); }catch(e){}
+    micBtn.classList.add('recording'); micBtn.textContent = '⏸️';
+    micStatus.textContent = 'يستمع الآن...';
+  } else {
+    recognizing = false;
+    recognition.stop();
+    micBtn.classList.remove('recording'); micBtn.textContent = '🎙️';
+    micStatus.textContent = 'متوقف — اضغط للمتابعة';
+  }
+};
+
+addManualBtn.onclick = ()=>{
+  const t = manualText.value.trim();
+  if(!t) return;
+  finalTranscript += t + ' ';
+  renderTranscript('');
+  manualText.value = '';
+  micStatus.textContent = 'تمت إضافة النص — اضغط "ترجم وحدّث الملخص"';
+};
+
+const quranHadithWrap = document.getElementById('quranHadithWrap');
+const quranHadithList = document.getElementById('quranHadithList');
+const mediaFile = document.getElementById('mediaFile');
+const transcribeBtn = document.getElementById('transcribeBtn');
+
+function renderQuranHadith(list){
+  if(!list || !list.length){ return; }
+  quranHadithList.innerHTML = list.map(item => `
+    <div class="qh-item">
+      ${item.text}
+      ${item.reference ? `<span class="ref">${item.reference}</span>` : ''}
+    </div>
+  `).join('');
+  quranHadithWrap.style.display = 'block';
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+transcribeBtn.onclick = async () => {
+  const file = mediaFile.files[0];
+  if(!file){ micStatus.textContent = 'اختر ملفاً أولاً (صوت، فيديو، أو صورة).'; return; }
+  if(file.size > 4 * 1024 * 1024){
+    micStatus.textContent = 'الملف كبير جداً (أكبر من ٤ ميجا تقريباً) — جرّب مقطعاً أقصر.';
+    return;
+  }
+  transcribeBtn.disabled = true;
+  const original = transcribeBtn.textContent;
+  transcribeBtn.textContent = 'جاري التفريغ والتحليل...';
+  try{
+    const base64 = await fileToBase64(file);
+    const r = await fetch('/api/transcribe', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ mimeType: file.type, data: base64, lang: langSelect.value })
+    });
+    const data = await r.json();
+    if(!r.ok || data.error){
+      translationBox.innerHTML = `<b style="color:#b23a2f">خطأ فعلي من السيرفر:</b><br>${data.error || ('HTTP ' + r.status)}`;
+      translationWrap.style.display = 'block';
+    } else {
+      if(data.transcript){ finalTranscript += data.transcript + ' '; renderTranscript(''); lastProcessedLen = finalTranscript.length; }
+      if(data.summary){ summaryList.innerHTML = data.summary.map(s=>`<li>${s}</li>`).join(''); summaryWrap.style.display='block'; }
+      if(data.translation){ translationBox.textContent = data.translation; translationWrap.style.display='block'; }
+      renderQuranHadith(data.quranHadith);
+      micStatus.textContent = 'تم تحليل الملف بنجاح.';
+    }
+  }catch(e){
+    translationBox.innerHTML = `<b style="color:#b23a2f">خطأ:</b><br>${e.message}`;
+    translationWrap.style.display = 'block';
+  }
+  transcribeBtn.disabled = false;
+  transcribeBtn.textContent = original;
+};
+
+updateBtn.onclick = async ()=>{
+  if(!finalTranscript.trim()){ micStatus.textContent = 'لا يوجد نص بعد — تحدث أو الصق نصاً أولاً.'; return; }
+  updateBtn.disabled = true;
+  const original = updateBtn.textContent;
+  updateBtn.textContent = 'جاري التحديث...';
+  const newChunk = finalTranscript.slice(lastProcessedLen).trim() || finalTranscript.slice(-400);
+  try{
+    const r = await fetch('/api/listen', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ transcript: finalTranscript, newChunk, lang: langSelect.value })
+    });
+    const data = await r.json();
+    if(!r.ok || data.error){
+      translationBox.innerHTML = `<b style="color:#b23a2f">خطأ فعلي من السيرفر:</b><br>${data.error || ('HTTP ' + r.status)}`;
+      translationWrap.style.display = 'block';
+    } else {
+      if(data.summary){ summaryList.innerHTML = data.summary.map(s=>`<li>${s}</li>`).join(''); summaryWrap.style.display='block'; }
+      if(data.translation){ translationBox.textContent = data.translation; translationWrap.style.display='block'; }
+      renderQuranHadith(data.quranHadith);
+    }
+  }catch(e){
+    translationBox.textContent = 'تعذّر التحديث الآن، حاول مجدداً.';
+    translationWrap.style.display = 'block';
+  }
+  lastProcessedLen = finalTranscript.length;
+  updateBtn.disabled = false;
+  updateBtn.textContent = original;
+};
+
+askDuringBtn.onclick = ()=>{
+  const bullets = summaryList.querySelectorAll('li');
+  let note = '';
+  if(bullets.length){
+    const points = Array.from(bullets).map(li=>li.textContent).join(' • ');
+    note = `<div class="context-note">هذا السؤال متابع لموضوع تسمعه الآن: ${points}</div>`;
+  } else if(finalTranscript.trim()){
+    note = `<div class="context-note">هذا السؤال متابع لمقطع سمعته: "${finalTranscript.trim().slice(-160)}"</div>`;
+  }
+  contextNoteWrap.innerHTML = note;
+  showTab('ask');
+  qInput.focus();
+};
+</script>
+</body>
+</html>
